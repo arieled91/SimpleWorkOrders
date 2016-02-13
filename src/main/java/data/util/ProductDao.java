@@ -10,14 +10,16 @@ public class ProductDao extends GenericDao<Product>{
 
 	@Override
 	public Product build(ResultSet result) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		Product p = new Product();
+		p.setId(result.getInt("ID"));
+		p.setName(result.getString("DESCRIPTION"));
+		return p;
 	}
+
 
 	@Override
 	public String selectAllQuery() {
-		// TODO Auto-generated method stub
-		return null;
+		return "SELECT * FROM PRODUCTS";
 	}
 
 	@Override
