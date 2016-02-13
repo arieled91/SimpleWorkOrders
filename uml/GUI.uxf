@@ -13,12 +13,12 @@
 --
 Menu:
     Operario:
-        OT Asignadas
-        Buscar OT    
+        Tareas Asignadas
         
     Supervisor:
         Ingreso y Consulta OT
         Consulta Stock
+        Actualizar Instrucciones
        
 </panel_attributes>
     <additional_attributes/>
