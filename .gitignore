@@ -1,4 +1,15 @@
 *.class
+.classpath
+.project
+.settings/
+
+
+#Documents
+*.doc
+*.odf
+*.pdf
+*.uxf
+
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
