@@ -3,6 +3,7 @@ package main.java.data.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import main.java.domain.business.Feedstock;
 import main.java.domain.business.FeedstockDetail;
 
 public class FeedstockDetailDao extends GenericDao<FeedstockDetail>{
@@ -30,11 +31,10 @@ public class FeedstockDetailDao extends GenericDao<FeedstockDetail>{
 
 	@Override
 	public FeedstockDetail build(ResultSet result) throws SQLException {
-		FeedstockDao dao = new FeedstockDao();
 		FeedstockDetail feedstockDetail = new FeedstockDetail();
-		String feedstockId = result.getInt("FEEDSTOCK_ID")+"";
+		int feedstockId = result.getInt("FEEDSTOCK_ID");
 		
-		feedstockDetail.setFeedstock(dao.find(feedstockId));
+		feedstockDetail.setFeedstock(Feedstock.find(feedstockId));
 		feedstockDetail.setAmount(result.getDouble("AMOUNT"));
 		
 		return feedstockDetail;

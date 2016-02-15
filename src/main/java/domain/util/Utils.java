@@ -20,11 +20,24 @@ public class Utils {
 		} catch (ParseException e) {
 			e.printStackTrace();
 			System.err.println("Error parsing string to calendar");
+			return null;
 		}
 		
 		return calendar;
 	}
 	
+	public static Calendar fromInt(int date, int month, int year){
+		Calendar calendar = Calendar.getInstance();
+		try {
+			calendar.set(year, month, date);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("Error invalid date");
+			return null;
+		}
+		
+		return calendar;
+	}
 
 	public static boolean isEmpty(String s){
 		return s==null || s.equals("");

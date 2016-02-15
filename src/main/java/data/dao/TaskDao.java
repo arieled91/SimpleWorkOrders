@@ -4,8 +4,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import main.java.data.util.Database;
+import main.java.domain.business.FeedstockDetail;
 import main.java.domain.business.Task;
 import main.java.domain.business.WorkOrderId;
+import main.java.domain.business.Worker;
 
 public class TaskDao extends GenericDao<Task>{
 	
@@ -33,27 +35,21 @@ public class TaskDao extends GenericDao<Task>{
 
 	@Override
 	public Task build(ResultSet result) throws SQLException {
-		
-		WorkerDao workerDao = new WorkerDao();
-		
 		Task t = new Task();
 		t.setId(result.getInt("ID"));
 		t.setDescription(result.getString("DESCRIPTION"));
 		t.setInExecution(result.getBoolean("IN_EXECUTION"));
 		t.setDateFinish(result.getString("DATE_FINISH"));
+		t.setFeedstocks(FeedstockDetail.list(t.getId()));
+		t.setWorker(Worker.find(result.getInt("WORKER_ID")));
 		
-		FeedstockDetailDao feedstockDetailDao = new FeedstockDetailDao(t.getId());
-		
-		t.setFeedstocks(feedstockDetailDao.getList());
-		t.setWorker(workerDao.find(result.getInt("WORKER_ID")+""));
-		
-		return null;
+		return t;
 	}
 
 	@Override
 	public void insert(Task task) {
 		final String insert = "INSERT INTO "+TABLE_NAME +" (DESCRIPTION, WORKER_ID, WORK_ORDER_ID) VALUES("
-						+task.getDescription()+task.getWorker().getId()+workOrderId
+						+task.getDescription()+", "+task.getWorker().getId()+", "+workOrderId
 						+")";
 		
 		Database.get().executeQuery(insert);

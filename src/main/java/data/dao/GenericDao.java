@@ -31,7 +31,7 @@ public abstract class GenericDao<T> {
 			result = Database.get().executeQuery(findQuery(id));
 			return build(result);
 		}catch (SQLException e) {
-			System.err.println("Error");
+			System.out.println("Id not found");
 			return null;
 		}	
 	}

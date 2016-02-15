@@ -3,18 +3,20 @@ package main.java.domain.business;
 import java.util.Calendar;
 import java.util.List;
 
+import main.java.data.dao.WorkOrderDao;
 import main.java.domain.util.Utils;
 
 public class WorkOrder {
 	
+	
 	private WorkOrderId id;
-	private Calendar dateCreate;
+	private Calendar dateCreate = Calendar.getInstance();
 	private Calendar dateFinish;
 	private Product product;
-	private double amount;
-	private String description;
-	private boolean urgent;
-	private String status;
+	private double amount = 0;
+	private String description = "";
+	private boolean urgent = false;
+	private Status status = Status.INICIATED;
 	private List<Task> tasks;
 	
 	
@@ -23,7 +25,7 @@ public class WorkOrder {
 
 
 	public WorkOrder(WorkOrderId id, Calendar dateCreate, Calendar dateFinish, Product product, double amount,
-			String description, boolean urgent, String status, List<Task> tasks) {
+			String description, boolean urgent, Status status, List<Task> tasks) {
 		this.id = id;
 		this.dateCreate = dateCreate;
 		this.dateFinish = dateFinish;
@@ -107,12 +109,16 @@ public class WorkOrder {
 		this.urgent = urgent;
 	}
 
-	public String getStatus() {
+	public Status getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(Status status) {
 		this.status = status;
+	}
+	
+	public void setStatus(String status) {
+		this.status = Status.valueOf(status);
 	}
 
 	public List<Task> getTasks() {
@@ -123,6 +129,39 @@ public class WorkOrder {
 		this.tasks = tasks;
 	}
 	
+	public static WorkOrder find(int id, int year) {
+		return find(new WorkOrderId(id, year));
+	}
 	
+	public static WorkOrder find(WorkOrderId workOrderId) {
+		WorkOrderDao dao = new WorkOrderDao();
+		return dao.find(workOrderId.toString());
+	}
+	
+	public static List<WorkOrder> list(){
+		WorkOrderDao dao = new WorkOrderDao();
+		return dao.getList();
+	}
+	
+	enum Status{
+		INICIATED("Iniciado"),
+		ASSIGNED("Asignado"),
+		IN_EXECUTION("En ejecución"),
+		FINISHED("Cumplida");
+		
+		private String label;
+
+		private Status(String label) {
+			this.label = label;
+		}
+
+		public String getLabel() {
+			return label;
+		}
+
+		public void setLabel(String label) {
+			this.label = label;
+		}
+	}
 		
 }

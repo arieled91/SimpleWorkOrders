@@ -1,5 +1,9 @@
 package main.java.domain.business;
 
+import java.util.List;
+
+import main.java.data.dao.FeedstockDao;
+
 public class Feedstock {
 	
 	private int id;
@@ -30,6 +34,14 @@ public class Feedstock {
 		this.id = id;
 	}
 	
+	public static Feedstock find(int id) {
+		FeedstockDao dao = new FeedstockDao();
+		return dao.find(id+"");
+	}
 	
+	public static List<Feedstock> list(){
+		FeedstockDao dao = new FeedstockDao();
+		return dao.getList();
+	}
 
 }

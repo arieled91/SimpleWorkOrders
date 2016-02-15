@@ -1,7 +1,10 @@
 package main.java.domain.business;
 
+import java.util.List;
 
-public class Product {
+import main.java.data.dao.ProductDao;
+
+public class Product{
 	
 	private int id;
 	private String name;
@@ -29,6 +32,22 @@ public class Product {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	public static Product find(int id) {
+		ProductDao dao = new ProductDao();
+		return dao.find(id+"");
+	}
+	
+	public static List<Product> list(){
+		ProductDao dao = new ProductDao();
+		return dao.getList();
+	}
+
+	@Override
+	public String toString() {
+		return id + " - " + name;
+	}
+	
 	
 	
 

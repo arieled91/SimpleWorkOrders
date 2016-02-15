@@ -15,7 +15,7 @@ public class ProductDao extends GenericDao<Product>{
 	public Product build(ResultSet result) throws SQLException {
 		Product p = new Product();
 		p.setId(result.getInt("ID"));
-		p.setName(result.getString("DESCRIPTION"));
+		p.setName(result.getString("NAME"));
 		return p;
 	}
 

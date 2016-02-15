@@ -1,9 +1,11 @@
 package main.java.domain.business;
 
+import java.util.Calendar;
+
 public class WorkOrderId {
 	
-	private int id=0;
-	private int year=0;
+	private int id;
+	private int year=Calendar.getInstance().get(Calendar.YEAR);
 	
 	
 	public WorkOrderId() {

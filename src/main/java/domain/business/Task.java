@@ -3,6 +3,7 @@ package main.java.domain.business;
 import java.util.Calendar;
 import java.util.List;
 
+import main.java.data.dao.TaskDao;
 import main.java.domain.util.Utils;
 
 public class Task {
@@ -85,7 +86,19 @@ public class Task {
 		this.worker = worker;
 	}
 	
+	public static Task find(int id) {
+		TaskDao dao = new TaskDao();
+		return dao.find(id+"");
+	}
 	
+	public static List<Task> list(WorkOrderId id){
+		TaskDao dao = new TaskDao(id);
+		return dao.getList();
+	}
+	
+	public static List<Task> list(int workOrderId, int workOrderYear){
+		return list(new WorkOrderId(workOrderId, workOrderYear));
+	}
 	
 	
 	
