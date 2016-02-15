@@ -1,12 +1,15 @@
-package main.java.data.util;
+package main.java.data.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import main.java.data.dao.GenericDao;
-import main.java.domain.Product;
+import main.java.domain.business.Product;
 
 public class ProductDao extends GenericDao<Product>{
+	
+	public ProductDao(){}
+	
+	private static final String TABLE_NAME = "PRODUCT";
 
 	@Override
 	public Product build(ResultSet result) throws SQLException {
@@ -14,12 +17,6 @@ public class ProductDao extends GenericDao<Product>{
 		p.setId(result.getInt("ID"));
 		p.setName(result.getString("DESCRIPTION"));
 		return p;
-	}
-
-
-	@Override
-	public String selectAllQuery() {
-		return "SELECT * FROM PRODUCTS";
 	}
 
 	@Override
@@ -40,6 +37,9 @@ public class ProductDao extends GenericDao<Product>{
 		
 	}
 
-	
+	@Override
+	public String getTableName() {
+		return TABLE_NAME;
+	}
 	
 }

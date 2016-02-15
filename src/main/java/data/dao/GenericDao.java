@@ -25,11 +25,29 @@ public abstract class GenericDao<T> {
 		}		
 	}
 	
+	public T find(String id){
+		ResultSet result;
+		try{
+			result = Database.get().executeQuery(findQuery(id));
+			return build(result);
+		}catch (SQLException e) {
+			System.err.println("Error");
+			return null;
+		}	
+	}
+	
+	public String selectAllQuery(){
+		return "SELECT * FROM "+getTableName();
+	}
+	
+	public String findQuery(String id){
+		return "SELECT * FROM "+getTableName()+" WHERE ID = "+id;
+	}
+	
+	public abstract String getTableName();
 	public abstract T build(ResultSet result) throws SQLException ;
-	public abstract String selectAllQuery();
 	public abstract void insert(T obj);
 	public abstract void update(T obj);
 	public abstract void delete(int id);
-
 
 }

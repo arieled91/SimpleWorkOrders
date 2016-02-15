@@ -1,4 +1,4 @@
-package main.java.domain;
+package main.java.domain.business;
 
 public class Feedstock {
 	

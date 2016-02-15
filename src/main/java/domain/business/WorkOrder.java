@@ -1,10 +1,13 @@
-package main.java.domain;
+package main.java.domain.business;
 
 import java.util.Calendar;
+import java.util.List;
+
+import main.java.domain.util.Utils;
 
 public class WorkOrder {
 	
-	private String id;
+	private WorkOrderId id;
 	private Calendar dateCreate;
 	private Calendar dateFinish;
 	private Product product;
@@ -12,13 +15,15 @@ public class WorkOrder {
 	private String description;
 	private boolean urgent;
 	private String status;
+	private List<Task> tasks;
 	
 	
 	public WorkOrder() {
 	}
 
-	public WorkOrder(String id, Calendar dateCreate, Calendar dateFinish, Product product, double amount,
-			String description, boolean urgent, String status) {
+
+	public WorkOrder(WorkOrderId id, Calendar dateCreate, Calendar dateFinish, Product product, double amount,
+			String description, boolean urgent, String status, List<Task> tasks) {
 		this.id = id;
 		this.dateCreate = dateCreate;
 		this.dateFinish = dateFinish;
@@ -27,32 +32,49 @@ public class WorkOrder {
 		this.description = description;
 		this.urgent = urgent;
 		this.status = status;
+		this.tasks = tasks;
 	}
 
-	public String getId() {
+	public WorkOrderId getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(WorkOrderId id) {
 		this.id = id;
 	}
 
 	public Calendar getDateCreate() {
 		return dateCreate;
 	}
+	
+	public String getDateCreateString() {
+		return Utils.toString(dateCreate);
+	}
 
 	public void setDateCreate(Calendar dateCreate) {
 		this.dateCreate = dateCreate;
 	}
+	
+	public void setDateCreate(String dateCreate) {
+		this.dateCreate = Utils.fromString(dateCreate);
+	}
 
 	public Calendar getDateFinish() {
 		return dateFinish;
+	}
+	
+	public String getDateFinishString() {
+		return Utils.toString(dateFinish);
 	}
 
 	public void setDateFinish(Calendar dateFinish) {
 		this.dateFinish = dateFinish;
 	}
 
+	public void setDateFinish(String dateFinish) {
+		this.dateFinish = Utils.fromString(dateFinish);
+	}
+	
 	public Product getProduct() {
 		return product;
 	}
@@ -92,5 +114,15 @@ public class WorkOrder {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+
+	public List<Task> getTasks() {
+		return tasks;
+	}
+
+	public void setTasks(List<Task> tasks) {
+		this.tasks = tasks;
+	}
+	
+	
 		
 }

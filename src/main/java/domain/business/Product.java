@@ -1,20 +1,17 @@
-package main.java.domain;
+package main.java.domain.business;
 
-import java.util.List;
 
 public class Product {
 	
 	private int id;
 	private String name;
-	private List<Task> tasks;
 	
 	public Product() {
 	}
 
-	public Product(int id, String name, List<Task> tasks) {
+	public Product(int id, String name) {
 		this.id = id;
 		this.name = name;
-		this.tasks = tasks;
 	}
 
 	public int getId() {
@@ -31,14 +28,6 @@ public class Product {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public List<Task> getTasks() {
-		return tasks;
-	}
-
-	public void setTasks(List<Task> tasks) {
-		this.tasks = tasks;
 	}
 	
 	

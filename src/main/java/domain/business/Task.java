@@ -1,7 +1,9 @@
-package main.java.domain;
+package main.java.domain.business;
 
 import java.util.Calendar;
 import java.util.List;
+
+import main.java.domain.util.Utils;
 
 public class Task {
 	
@@ -46,9 +48,17 @@ public class Task {
 	public Calendar getDateFinish() {
 		return dateFinish;
 	}
+	
+	public String getDateFinishString() {
+		return Utils.toString(dateFinish);
+	}
 
 	public void setDateFinish(Calendar dateFinish) {
 		this.dateFinish = dateFinish;
+	}
+	
+	public void setDateFinish(String dateFinish) {
+		this.dateFinish = Utils.fromString(dateFinish);
 	}
 
 	public List<FeedstockDetail> getFeedstocks() {

@@ -1,4 +1,4 @@
-package main.java.domain;
+package main.java.domain.business;
 
 public class Worker {
 
@@ -22,7 +22,13 @@ public class Worker {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
-	
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 	
 }
