@@ -4,7 +4,7 @@
     <type>com.umlet.element.Class</type>
     <coordinates>
       <x>384</x>
-      <y>120</y>
+      <y>144</y>
       <w>168</w>
       <h>136</h>
     </coordinates>
@@ -25,7 +25,7 @@
     <type>com.umlet.element.Class</type>
     <coordinates>
       <x>616</x>
-      <y>152</y>
+      <y>176</y>
       <w>168</w>
       <h>72</h>
     </coordinates>
@@ -39,7 +39,7 @@
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>528</x>
-      <y>176</y>
+      <y>200</y>
       <w>104</w>
       <h>40</h>
     </coordinates>
@@ -85,7 +85,7 @@
 -description: String
 -inExecution: boolean
 -dateFinish: Calendar
--feedStocks: FeedStockDetail[]
+-feedStock: FeedStockDetail
 -worker: Worker
 </panel_attributes>
     <additional_attributes/>
@@ -94,12 +94,12 @@
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>440</x>
-      <y>232</y>
+      <y>256</y>
       <w>40</w>
-      <h>112</h>
+      <h>88</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>24;96;24;24</additional_attributes>
+    <additional_attributes>24;72;24;24</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
