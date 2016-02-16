@@ -1,9 +1,13 @@
 package main.java.data.dao;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import main.java.data.util.Database;
+import main.java.data.util.Filer;
 import main.java.domain.business.Product;
 import main.java.domain.business.Task;
 import main.java.domain.business.WorkOrder;
@@ -12,6 +16,7 @@ import main.java.domain.business.WorkOrderId;
 public class WorkOrderDao extends GenericDao<WorkOrder>{
 	
 	private static final String TABLE_NAME = "WORK_ORDER";
+	private static final String TASK_PATH = "tasks/";
 
 	@Override
 	public String getTableName() {
@@ -35,7 +40,7 @@ public class WorkOrderDao extends GenericDao<WorkOrder>{
 		w.setDescription(result.getString("DESCRIPTION"));
 		w.setUrgent(result.getBoolean("URGENT"));
 		w.setStatus(result.getString("STATUS"));
-		w.setTasks(Task.list(w.getId()));
+		w.setTasks(getTasks(w.getProduct().getId()));
 		
 		return w;
 	}
@@ -73,6 +78,21 @@ public class WorkOrderDao extends GenericDao<WorkOrder>{
 	public void delete(int id) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public List<Task> getTasks(int productId){
+		try {
+			List<String> rawtasks = Filer.read(TASK_PATH+productId);
+			List<Task> tasks = new ArrayList<>();
+			for (String line : rawtasks) {
+				tasks.add(TaskDao.build(line));
+			}
+			return tasks;
+			
+		} catch (IOException e) {
+			System.out.println("Error, maybe the product id="+productId+" doesn't have a task file");
+			return null;
+		}
 	}
 
 }

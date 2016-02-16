@@ -1,9 +1,11 @@
-package main.java.domain.util;
+package main.java.common;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
+
+import javax.swing.JOptionPane;
 
 public class Utils {
 
@@ -49,6 +51,18 @@ public class Utils {
 	 
 	public static boolean areEquals(String a, String b){
 		return a.trim().toLowerCase().equals(b.trim().toLowerCase());
+	}
+	
+	public static int parseInt(String n){
+		try{
+			return Integer.parseInt(n);
+		}catch(Exception e){
+			return 0;
+		}
+	}
+	
+	public static void showMessageDialog(String message){
+		JOptionPane.showMessageDialog(null, message, "Atención", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 }

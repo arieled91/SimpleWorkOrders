@@ -3,7 +3,9 @@ package main.java.data.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import main.java.common.Utils;
 import main.java.data.util.Database;
+import main.java.domain.business.Feedstock;
 import main.java.domain.business.FeedstockDetail;
 import main.java.domain.business.Task;
 import main.java.domain.business.WorkOrderId;
@@ -40,7 +42,8 @@ public class TaskDao extends GenericDao<Task>{
 		t.setDescription(result.getString("DESCRIPTION"));
 		t.setInExecution(result.getBoolean("IN_EXECUTION"));
 		t.setDateFinish(result.getString("DATE_FINISH"));
-		t.setFeedstocks(FeedstockDetail.list(t.getId()));
+		Feedstock feedstock = Feedstock.find(result.getInt("FEEDSTOCK_ID"));
+		t.setFeedstock(new FeedstockDetail(feedstock, result.getDouble("AMOUNT")));
 		t.setWorker(Worker.find(result.getInt("WORKER_ID")));
 		
 		return t;
@@ -70,6 +73,20 @@ public class TaskDao extends GenericDao<Task>{
 						" WHERE ID = "+task.getId()+" AND WORK_ORDER_ID = "+workOrderId;
 				
 		Database.get().executeUpdate(update);
+	}
+
+	public static Task build(String text) {
+		Task task = new Task();
+		String[] arr = text.split(";");
+		String description = arr[0];
+		int feedstockId = Utils.parseInt(arr[1]);
+		int amount = Utils.parseInt(arr[2]);
+		task.setDescription(description);
+		if(feedstockId>0 && amount>0){
+			Feedstock feedstock = Feedstock.find(feedstockId);
+			task.setFeedstock(new FeedstockDetail(feedstock, amount));
+		}
+		return task;
 	}
 
 	@Override

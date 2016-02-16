@@ -3,8 +3,8 @@ package main.java.domain.business;
 import java.util.Calendar;
 import java.util.List;
 
+import main.java.common.Utils;
 import main.java.data.dao.WorkOrderDao;
-import main.java.domain.util.Utils;
 
 public class WorkOrder {
 	
@@ -143,7 +143,15 @@ public class WorkOrder {
 		return dao.getList();
 	}
 	
-	enum Status{
+	public void persist(){
+		WorkOrderDao dao = new WorkOrderDao();
+		if(find(id)==null)
+			dao.insert(this);
+		else
+			dao.update(this);			
+	}
+	
+	public enum Status{
 		INICIATED("Iniciado"),
 		ASSIGNED("Asignado"),
 		IN_EXECUTION("En ejecución"),

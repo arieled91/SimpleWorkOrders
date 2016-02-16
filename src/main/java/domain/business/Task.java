@@ -3,8 +3,8 @@ package main.java.domain.business;
 import java.util.Calendar;
 import java.util.List;
 
+import main.java.common.Utils;
 import main.java.data.dao.TaskDao;
-import main.java.domain.util.Utils;
 
 public class Task {
 	
@@ -12,7 +12,7 @@ public class Task {
 	private String description;
 	private boolean inExecution;
 	private Calendar dateFinish;
-	private List<FeedstockDetail> feedstocks;
+	private FeedstockDetail feedstock;
 	private Worker worker;
 	
 
@@ -20,13 +20,13 @@ public class Task {
 	public Task() {
 	}
 
-	public Task(int id, String description, boolean inExecution, Calendar dateFinish, List<FeedstockDetail> feedstocks,
+	public Task(int id, String description, boolean inExecution, Calendar dateFinish, FeedstockDetail feedstock,
 			Worker worker) {
 		this.id = id;
 		this.description = description;
 		this.inExecution = inExecution;
 		this.dateFinish = dateFinish;
-		this.feedstocks = feedstocks;
+		this.feedstock = feedstock;
 		this.worker = worker;
 	}
 
@@ -62,12 +62,12 @@ public class Task {
 		this.dateFinish = Utils.fromString(dateFinish);
 	}
 
-	public List<FeedstockDetail> getFeedstocks() {
-		return feedstocks;
+	public FeedstockDetail getFeedstock() {
+		return feedstock;
 	}
 
-	public void setFeedstocks(List<FeedstockDetail> feedstocks) {
-		this.feedstocks = feedstocks;
+	public void setFeedstock(FeedstockDetail feedstock) {
+		this.feedstock = feedstock;
 	}
 
 	public boolean isInExecution() {
