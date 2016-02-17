@@ -1,10 +1,10 @@
 package main.java.domain.business;
 
-import java.util.Calendar;
-import java.util.List;
-
 import main.java.common.Utils;
 import main.java.data.dao.WorkOrderDao;
+
+import java.util.Calendar;
+import java.util.List;
 
 public class WorkOrder {
 	
@@ -18,6 +18,7 @@ public class WorkOrder {
 	private boolean urgent = false;
 	private Status status = Status.INICIATED;
 	private List<Task> tasks;
+	private Worker worker;
 	
 	
 	public WorkOrder() {
@@ -25,7 +26,7 @@ public class WorkOrder {
 
 
 	public WorkOrder(WorkOrderId id, Calendar dateCreate, Calendar dateFinish, Product product, double amount,
-			String description, boolean urgent, Status status, List<Task> tasks) {
+			String description, boolean urgent, Status status, List<Task> tasks, Worker worker) {
 		this.id = id;
 		this.dateCreate = dateCreate;
 		this.dateFinish = dateFinish;
@@ -35,6 +36,7 @@ public class WorkOrder {
 		this.urgent = urgent;
 		this.status = status;
 		this.tasks = tasks;
+		this.worker = worker;
 	}
 
 	public WorkOrderId getId() {
@@ -129,6 +131,14 @@ public class WorkOrder {
 		this.tasks = tasks;
 	}
 	
+	public Worker getWorker() {
+		return worker;
+	}
+
+	public void setWorker(Worker worker) {
+		this.worker = worker;
+	}
+	
 	public static WorkOrder find(int id, int year) {
 		return find(new WorkOrderId(id, year));
 	}
@@ -143,12 +153,18 @@ public class WorkOrder {
 		return dao.getList();
 	}
 	
-	public void persist(){
+	public void insert(){
 		WorkOrderDao dao = new WorkOrderDao();
-		if(find(id)==null)
-			dao.insert(this);
-		else
-			dao.update(this);			
+		dao.insert(this);
+	}
+	
+	public void update(){
+		WorkOrderDao dao = new WorkOrderDao();
+		dao.update(this);			
+	}
+	
+	public boolean exists(){
+		return find(id)!=null;
 	}
 	
 	public enum Status{
@@ -171,5 +187,17 @@ public class WorkOrder {
 			this.label = label;
 		}
 	}
-		
+
+    @Override
+    public String toString() {
+        return id + " | " + product +" | "+ status;
+    }
+
+    public boolean tasksFinied(){
+        for (Task task : tasks) {
+            if(Utils.isEmpty(task.getDateFinishString()))
+                return false;
+        }
+        return true;
+    }
 }

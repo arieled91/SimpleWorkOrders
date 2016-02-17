@@ -1,8 +1,8 @@
 package main.java.domain.business;
 
-import java.util.List;
-
 import main.java.data.dao.ProductDao;
+
+import java.util.List;
 
 public class Product{
 	

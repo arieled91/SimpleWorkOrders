@@ -1,12 +1,6 @@
 package main.java.data.util;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class Database {
 	
@@ -21,8 +15,8 @@ public class Database {
 
 	private Database(){
 		try {
-			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			Class.forName(DRIVER);
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			Runtime.getRuntime().addShutdownHook(new Thread(() -> {closeConnection();}));
 		} catch (SQLException | ClassNotFoundException e) {
 			e.printStackTrace();

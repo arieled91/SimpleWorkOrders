@@ -2,7 +2,9 @@
 .classpath
 .project
 .settings/
-
+.idea
+out/
+*.iml
 
 #Documents
 *.doc

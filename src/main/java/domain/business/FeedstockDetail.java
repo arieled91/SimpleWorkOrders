@@ -1,7 +1,5 @@
 package main.java.domain.business;
 
-import java.util.List;
-
 public class FeedstockDetail {
 	
 	private Feedstock feedstock;

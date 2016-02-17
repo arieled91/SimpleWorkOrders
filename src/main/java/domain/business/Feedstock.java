@@ -1,8 +1,8 @@
 package main.java.domain.business;
 
-import java.util.List;
-
 import main.java.data.dao.FeedstockDao;
+
+import java.util.List;
 
 public class Feedstock {
 	
@@ -13,12 +13,12 @@ public class Feedstock {
 	public Feedstock() {
 	}
 
-	public Feedstock(int id, String description) {
-		this.id = id;
-		this.description = description;
-	}
+    public Feedstock(int id, String description) {
+        this.id = id;
+        this.description = description;
+    }
 
-	public String getDescription() {
+    public String getDescription() {
 		return description;
 	}
 
@@ -33,8 +33,8 @@ public class Feedstock {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
-	public static Feedstock find(int id) {
+
+    public static Feedstock find(int id) {
 		FeedstockDao dao = new FeedstockDao();
 		return dao.find(id+"");
 	}
@@ -43,5 +43,19 @@ public class Feedstock {
 		FeedstockDao dao = new FeedstockDao();
 		return dao.getList();
 	}
+
+    @Override
+    public String toString() {
+        return id +" - "+ description;
+    }
+
+    public static double requestStock(int feedstockId){
+        return FeedstockDao.stockRequest(feedstockId);
+    }
+
+    public static void requestStock(int feedstockId, double amount){
+        FeedstockDao.stockRequest(feedstockId, amount);
+    }
+
 
 }

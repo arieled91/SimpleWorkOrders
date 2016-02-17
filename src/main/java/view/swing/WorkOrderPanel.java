@@ -1,25 +1,11 @@
 package main.java.view.swing;
 
 
-import java.util.Calendar;
-import java.util.List;
-
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-
 import main.java.common.Utils;
-import main.java.domain.business.Product;
-import main.java.domain.business.Task;
-import main.java.domain.business.WorkOrder;
-import main.java.domain.business.WorkOrderId;
-import main.java.domain.business.Worker;
+import main.java.domain.business.*;
+
+import javax.swing.*;
+import java.util.Calendar;
 
 public class WorkOrderPanel extends JPanel{
 
@@ -32,7 +18,8 @@ public class WorkOrderPanel extends JPanel{
 	private JTextField yearFilter = new JTextField("", SMALL);
 	private JButton searchBtn = new JButton("Buscar");
 	
-	private JTextField dateCreate = new JTextField(NORMAL);
+	private JTextField dateCreate = new JTextField(BIG);
+
 	private JTextField dateFinish = new JTextField(SMALL);
 	private JTextField monthFinish = new JTextField(SMALL);
 	private JTextField yearFinish = new JTextField(SMALL);
@@ -66,8 +53,8 @@ public class WorkOrderPanel extends JPanel{
 	}
 
 	private void search() {
-		int id = Integer.parseInt(idFilter.getText());
-		int year = Integer.parseInt(yearFilter.getText());
+		int id = Utils.parseInt(idFilter.getText());
+		int year = Utils.parseInt(yearFilter.getText());
 		clear();
 		idFilter.setText(id+"");
 		yearFilter.setText(year+"");
@@ -79,39 +66,66 @@ public class WorkOrderPanel extends JPanel{
 		}
 		populate(workOrder);
 	}
-	
-	
-	
+
 	private void populate(WorkOrder wo){
 		dateCreate.setText(wo.getDateCreateString());
 		dateFinish.setText(wo.getDateFinish().get(Calendar.DATE)+"");
-		monthFinish.setText(wo.getDateFinish().get(Calendar.MONTH+1)+"");
+		monthFinish.setText(wo.getDateFinish().get(Calendar.MONTH)+"");
 		yearFinish.setText(wo.getDateFinish().get(Calendar.YEAR)+"");
 		productCombo.setSelectedItem(wo.getProduct());
 		productAmount.setText(wo.getAmount()+"");
 		description.setText(wo.getDescription());
 		isUrgent.setSelected(wo.isUrgent());
 		status.setText(wo.getStatus().getLabel());
-		List<Task> tasks = wo.getTasks();
-		if(!Utils.isEmpty(tasks) && tasks.get(0).getWorker()!=null) 
-			workerCombo.setSelectedItem(tasks.get(0).getWorker());
+		workerCombo.setSelectedItem(wo.getWorker());
 	}
 
 	private void clear() {
 		idFilter.setText("");
 		yearFilter.setText("");
+        dateCreate.setText("");
+        dateFinish.setText("");
+        monthFinish.setText("");
+        yearFinish.setText("");
+        productAmount.setText("");
+        description.setText("");
+        status.setText("");
+        productCombo.setSelectedIndex(0);
+        workerCombo.setSelectedIndex(0);
+        isUrgent.setEnabled(false);
 	}
 
 	private void persist() {
 		if(validData()){
-			WorkOrder workOrder = build();
-			workOrder.persist();
-			//TODO persistir tasks
-		}
+			try{
+				WorkOrder workOrder = build();
+				if(workOrder.exists()){
+					workOrder.update();
+					Utils.showMessageDialog("OT Actualizada correctamente");
+				}else{
+					workOrder.insert();
+					Utils.showMessageDialog("OT Creada correctamente");
+				}
+			}catch(Exception e){
+				Utils.showMessageDialog("Error persistiendo la OT");
+				e.printStackTrace();
+			}
+		}else{
+            Utils.showMessageDialog("Los datos ingresados no son validos");
+        }
 	}
 	
 	private boolean validData(){
-		return false; // TODO terminar
+
+        if(!Utils.isInt(idFilter.getText()) && Utils.parseInt(idFilter.getText())<=0) return false;
+        if(!Utils.isInt(yearFilter.getText()) && Utils.parseInt(yearFilter.getText())<=1970) return false;
+        if(!Utils.isValidDate(dateFinish.getText(), monthFinish.getText(), yearFinish.getText())) return false;
+        if(!Utils.isDouble(productAmount.getText())) return false;
+
+
+
+		return true;
+
 	}
 	
 	private WorkOrder build(){
@@ -119,9 +133,13 @@ public class WorkOrderPanel extends JPanel{
 		wo.setId(new WorkOrderId(Utils.parseInt(idFilter.getText()), Utils.parseInt(yearFilter.getText())));
 		wo.setDateFinish(Utils.fromInt(Utils.parseInt(dateFinish.getText()), Utils.parseInt(monthFinish.getText()), Utils.parseInt(yearFinish.getText())));
 		wo.setProduct((Product)productCombo.getSelectedItem());
-		wo.setAmount(Utils.parseInt(productAmount.getText()));
+		wo.setAmount(Utils.parseDouble(productAmount.getText()));
 		wo.setDescription(description.getText());
 		wo.setUrgent(isUrgent.isSelected());
+		wo.setTasks(Task.getTasks(wo.getProduct().getId()));
+		wo.setWorker((Worker) workerCombo.getSelectedItem());
+		if(wo.getWorker()!=null)
+			wo.setStatus(WorkOrder.Status.ASSIGNED);
 		return wo;
 	}
 

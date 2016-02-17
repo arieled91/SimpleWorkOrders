@@ -1,9 +1,9 @@
 package main.java.data.dao;
 
+import main.java.domain.business.Worker;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import main.java.domain.business.Worker;
 
 public class WorkerDao extends GenericDao<Worker>{
 	

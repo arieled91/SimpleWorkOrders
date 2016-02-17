@@ -1,22 +1,16 @@
 package main.java.data.dao;
 
-import java.io.IOException;
+import main.java.common.Utils;
+import main.java.data.util.Database;
+import main.java.domain.business.*;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-
-import main.java.data.util.Database;
-import main.java.data.util.Filer;
-import main.java.domain.business.Product;
-import main.java.domain.business.Task;
-import main.java.domain.business.WorkOrder;
-import main.java.domain.business.WorkOrderId;
 
 public class WorkOrderDao extends GenericDao<WorkOrder>{
 	
 	private static final String TABLE_NAME = "WORK_ORDER";
-	private static final String TASK_PATH = "tasks/";
 
 	@Override
 	public String getTableName() {
@@ -32,27 +26,33 @@ public class WorkOrderDao extends GenericDao<WorkOrder>{
 	@Override
 	public WorkOrder build(ResultSet result) throws SQLException {
 		WorkOrder w = new WorkOrder();
+        List<Task> tasks = Task.list(w.getId());
 		w.setId(new WorkOrderId(result.getInt("ID"),result.getInt("YEAR")));
 		w.setDateCreate(result.getString("DATE_CREATE"));
 		w.setDateFinish(result.getString("DATE_FINISH"));
 		w.setProduct(Product.find(result.getInt("PRODUCT_ID")));
 		w.setAmount(result.getDouble("AMOUNT"));
-		w.setDescription(result.getString("DESCRIPTION"));
 		w.setUrgent(result.getBoolean("URGENT"));
 		w.setStatus(result.getString("STATUS"));
-		w.setTasks(getTasks(w.getProduct().getId()));
+		if(!Utils.isEmpty(tasks)) w.setTasks(tasks);
+		w.setWorker(Worker.find(result.getInt("WORKER_ID")));
+		w.setDescription(result.getString("DESCRIPTION"));
 		
 		return w;
 	}
 
 	@Override
 	public void insert(WorkOrder workOrder) {
-		final String insert = "INSERT INTO "+TABLE_NAME +" (YEAR, PRODUCT_ID, AMOUNT, DESCRIPTION, URGENT, STATUS, DATE_CREATE, DATE_FINISH) VALUES("
-				+workOrder.getId().getYear()+", "+workOrder.getProduct().getId()+", "+workOrder.getAmount()+", "+ workOrder.getDescription()+", "+workOrder.isUrgent()+", "+
-				workOrder.getStatus()+", "+workOrder.getDateCreateString()+", "+workOrder.getDateFinish()
+		final String insert = "INSERT INTO "+TABLE_NAME +" (ID, YEAR, PRODUCT_ID, AMOUNT, DESCRIPTION, URGENT, STATUS, DATE_CREATE, DATE_FINISH, WORKER_ID) VALUES("
+				+workOrder.getId().getId()+", "+workOrder.getId().getYear()+", "+workOrder.getProduct().getId()+", "+workOrder.getAmount()+", '"+ workOrder.getDescription()+"', "+workOrder.isUrgent()+", '"+
+				workOrder.getStatus()+"', '"+workOrder.getDateCreateString()+"', '"+workOrder.getDateFinishString()+"', "+workOrder.getWorker().getId()
 				+")";
 
-		Database.get().executeQuery(insert);
+		Database.get().executeUpdate(insert);
+
+        workOrder.setTasks(TaskDao.getTasks(workOrder.getProduct().getId()));
+		TaskDao taskDao = new TaskDao(workOrder.getId());
+		taskDao.insert(workOrder.getTasks());
 	}
 
 	@Override
@@ -65,14 +65,20 @@ public class WorkOrderDao extends GenericDao<WorkOrder>{
 		String update = "UPDATE "+TABLE_NAME+" SET"+
 							 " PRODUCT_ID = "+workOrder.getProduct().getId()+
 							", AMOUNT = "+workOrder.getAmount()+
-							", DESCRIPTION = "+workOrder.getDescription()+
-							", URGENT = "+workOrder.isUrgent()+
-							", DATE_CREATE = "+workOrder.getDateCreateString()+
-							", DATE_FINISH = "+workOrder.getDateFinishString()+
-						" WHERE ID = "+workOrder.getId().getYear()+" AND YEAR = "+workOrder.getId().getYear();
-				
-		Database.get().executeUpdate(update);
-	}
+							", DESCRIPTION = '"+workOrder.getDescription()+
+							"', URGENT = "+workOrder.isUrgent()+
+							", DATE_FINISH = '"+workOrder.getDateFinishString()+
+							"', STATUS = '"+workOrder.getStatus()+
+							"' , WORKER_ID = "+workOrder.getWorker().getId()+
+						" WHERE ID = "+workOrder.getId().getId()+" AND YEAR = "+workOrder.getId().getYear();
+
+        Database.get().executeUpdate(update);
+
+
+        for (Task task : workOrder.getTasks()) {
+            task.update();
+        }
+    }
 
 	@Override
 	public void delete(int id) {
@@ -80,19 +86,6 @@ public class WorkOrderDao extends GenericDao<WorkOrder>{
 		
 	}
 	
-	public List<Task> getTasks(int productId){
-		try {
-			List<String> rawtasks = Filer.read(TASK_PATH+productId);
-			List<Task> tasks = new ArrayList<>();
-			for (String line : rawtasks) {
-				tasks.add(TaskDao.build(line));
-			}
-			return tasks;
-			
-		} catch (IOException e) {
-			System.out.println("Error, maybe the product id="+productId+" doesn't have a task file");
-			return null;
-		}
-	}
+	
 
 }

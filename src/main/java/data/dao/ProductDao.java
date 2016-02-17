@@ -1,9 +1,9 @@
 package main.java.data.dao;
 
+import main.java.domain.business.Product;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import main.java.domain.business.Product;
 
 public class ProductDao extends GenericDao<Product>{
 	

@@ -1,11 +1,11 @@
 package main.java.data.dao;
 
+import main.java.data.util.Database;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import main.java.data.util.Database;
 
 
 public abstract class GenericDao<T> {
@@ -20,7 +20,7 @@ public abstract class GenericDao<T> {
 			}
 			return list;
 		} catch (SQLException e) {
-			System.err.println("Error");
+			e.printStackTrace();
 			return null;
 		}		
 	}
@@ -29,11 +29,12 @@ public abstract class GenericDao<T> {
 		ResultSet result;
 		try{
 			result = Database.get().executeQuery(findQuery(id));
-			return build(result);
+			while (result.next())
+				return build(result);
 		}catch (SQLException e) {
-			System.out.println("Id not found");
-			return null;
-		}	
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public String selectAllQuery(){

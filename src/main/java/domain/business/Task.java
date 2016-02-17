@@ -1,10 +1,10 @@
 package main.java.domain.business;
 
-import java.util.Calendar;
-import java.util.List;
-
 import main.java.common.Utils;
 import main.java.data.dao.TaskDao;
+
+import java.util.Calendar;
+import java.util.List;
 
 public class Task {
 	
@@ -13,21 +13,18 @@ public class Task {
 	private boolean inExecution;
 	private Calendar dateFinish;
 	private FeedstockDetail feedstock;
-	private Worker worker;
 	
 
 	
 	public Task() {
 	}
 
-	public Task(int id, String description, boolean inExecution, Calendar dateFinish, FeedstockDetail feedstock,
-			Worker worker) {
+	public Task(int id, String description, boolean inExecution, Calendar dateFinish, FeedstockDetail feedstock) {
 		this.id = id;
 		this.description = description;
 		this.inExecution = inExecution;
 		this.dateFinish = dateFinish;
 		this.feedstock = feedstock;
-		this.worker = worker;
 	}
 
 	public int getId() {
@@ -59,7 +56,8 @@ public class Task {
 	}
 	
 	public void setDateFinish(String dateFinish) {
-		this.dateFinish = Utils.fromString(dateFinish);
+        if(!Utils.isEmpty(dateFinish))
+		    this.dateFinish = Utils.fromString(dateFinish);
 	}
 
 	public FeedstockDetail getFeedstock() {
@@ -78,13 +76,6 @@ public class Task {
 		this.inExecution = inExecution;
 	}
 
-	public Worker getWorker() {
-		return worker;
-	}
-
-	public void setWorker(Worker worker) {
-		this.worker = worker;
-	}
 	
 	public static Task find(int id) {
 		TaskDao dao = new TaskDao();
@@ -100,7 +91,20 @@ public class Task {
 		return list(new WorkOrderId(workOrderId, workOrderYear));
 	}
 	
-	
-	
+	public static List<Task> getTasks(int productId){
+		return TaskDao.getTasks(productId);
+	}
 
+    public void update(){
+        TaskDao dao = new TaskDao();
+        dao.update(this);
+    }
+
+    public double stockMissing(){
+        return feedstock.getAmount()-Feedstock.requestStock(feedstock.getFeedstock().getId());
+    }
+
+    public boolean lowStock(){
+        return stockMissing()>0;
+    }
 }

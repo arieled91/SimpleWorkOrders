@@ -1,12 +1,7 @@
 package main.java.view.swing;
 
-import java.awt.BorderLayout;
-
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
 
 
 public class MainWindow extends JFrame{
@@ -15,8 +10,10 @@ public class MainWindow extends JFrame{
 	
 	private static final String MAIN_TITLE = "Sistema de Ordenes de Trabajo";
 	
-	private JMenuItem inputMi = new JMenuItem("Ingreso y consola de OT");
-	
+	private JMenuItem workOrder = new JMenuItem("Ingreso y consola de OT");
+    private JMenuItem workOrderListAdmin = new JMenuItem("Ordenes de Trabajo");
+    private JMenuItem workOrderListWorker = new JMenuItem("Tareas Asignadas");
+
 	private JPanel mainPanel = new JPanel();
 	private JPanel defaultPanel = new JPanel();
 	
@@ -30,7 +27,7 @@ public class MainWindow extends JFrame{
 		setSize(800,500);
 		setLayout(new BorderLayout());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		setLocationRelativeTo(null);
 		setVisible(true);
 		
@@ -39,12 +36,11 @@ public class MainWindow extends JFrame{
 	}
 
 	private void implementListeners() {
-		inputMi.addActionListener(e -> showWorkOrderPanel());
-		
-	}
+		workOrder.addActionListener(e -> show(new WorkOrderPanel()));
+        workOrderListAdmin.addActionListener(e -> show(new WorkOrderListPanel(true)));
+        workOrderListWorker.addActionListener(e -> show(new WorkOrderListPanel(false)));
+        //assignedTasks.addActionListener(e -> show(new AssignedTasksPanel()));
 
-	private void showWorkOrderPanel() {
-		show(new WorkOrderPanel());
 	}
 
 	private void populateWindow() {
@@ -57,8 +53,13 @@ public class MainWindow extends JFrame{
 	public JMenuBar getMenu(){
 		JMenuBar menuBar = new JMenuBar();
 		JMenu supervisor = new JMenu("Supervisor");
-		supervisor.add(inputMi);
+        JMenu operario = new JMenu("Operario");
+		supervisor.add(workOrder);
+        supervisor.add(workOrderListAdmin);
+
+        operario.add(workOrderListWorker);
 		menuBar.add(supervisor);
+        menuBar.add(operario);
 		
 		return menuBar;
 	}
