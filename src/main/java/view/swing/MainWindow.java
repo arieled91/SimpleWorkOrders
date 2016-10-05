@@ -10,7 +10,7 @@ public class MainWindow extends JFrame{
 	
 	private static final String MAIN_TITLE = "Sistema de Ordenes de Trabajo";
 	
-	private JMenuItem workOrder = new JMenuItem("Ingreso y consola de OT");
+	private JMenuItem workOrder = new JMenuItem("Ingreso y consulta de OT");
     private JMenuItem workOrderListAdmin = new JMenuItem("Ordenes de Trabajo");
     private JMenuItem workOrderListWorker = new JMenuItem("Tareas Asignadas");
 
