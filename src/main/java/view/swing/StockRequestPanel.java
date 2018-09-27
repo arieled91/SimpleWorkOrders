@@ -31,7 +31,7 @@ public class StockRequestPanel extends JPanel{
 
     private void requestStock() {
         Feedstock feedstock = task.getFeedstock().getFeedstock();
-        if(Utils.isDouble(amount.getText()) || Utils.parseDouble(amount.getText())>0)
+        if(Utils.isDouble(amount.getText()) && Utils.parseDouble(amount.getText())>0)
             Feedstock.requestStock(feedstock.getId(), Utils.parseDouble(amount.getText()));
     }
 
